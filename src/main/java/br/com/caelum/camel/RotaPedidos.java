@@ -16,7 +16,9 @@ public class RotaPedidos {
 			public void configure() throws Exception {
 				
 				from("file:pedidos?delay=5s&noop=true").
-				log("${id}").
+				split().xpath("/pedido/itens/item").
+				log("${body}").
+				filter().xpath("/item/formato[text()='EBOOK']").		
 				marshal().xmljson().
 				log("${body}").
 				setHeader("CamelFileName", simple("${file:name.noext}.json")).
